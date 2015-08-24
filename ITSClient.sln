@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ITSClient", "its\ITSClient.csproj", "{C5354FF9-39A1-436E-861F-78E20F841918}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8C529FB5-D246-45C6-A680-84437F0384D5} = {8C529FB5-D246-45C6-A680-84437F0384D5}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotKeys", "HotKeysLibrary\HotKeys.csproj", "{8C529FB5-D246-45C6-A680-84437F0384D5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{84D685B8-034E-45C3-B16E-4E5BD28D3D61}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C5354FF9-39A1-436E-861F-78E20F841918}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5354FF9-39A1-436E-861F-78E20F841918}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5354FF9-39A1-436E-861F-78E20F841918}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5354FF9-39A1-436E-861F-78E20F841918}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C529FB5-D246-45C6-A680-84437F0384D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C529FB5-D246-45C6-A680-84437F0384D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C529FB5-D246-45C6-A680-84437F0384D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C529FB5-D246-45C6-A680-84437F0384D5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

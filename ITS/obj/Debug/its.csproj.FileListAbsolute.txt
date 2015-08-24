@@ -1,0 +1,28 @@
+d:\documents\visual studio 2012\Projects\its\its\bin\Debug\its.exe.config
+d:\documents\visual studio 2012\Projects\its\its\obj\Debug\its.csprojResolveAssemblyReference.cache
+d:\documents\visual studio 2012\Projects\its\its\obj\Debug\its.Properties.Resources.resources
+d:\documents\visual studio 2012\Projects\its\its\obj\Debug\its.csproj.GenerateResource.Cache
+d:\documents\visual studio 2012\Projects\its\its\bin\Debug\its.exe
+d:\documents\visual studio 2012\Projects\its\its\bin\Debug\its.pdb
+d:\documents\visual studio 2012\Projects\its\its\obj\Debug\its.exe
+d:\documents\visual studio 2012\Projects\its\its\obj\Debug\its.pdb
+D:\Dropbox\work\its\its\bin\Debug\its.exe.config
+D:\Dropbox\work\its\its\obj\Debug\its.exe
+D:\Dropbox\work\its\its\obj\Debug\its.pdb
+D:\Dropbox\work\its\its\bin\Debug\its.exe
+D:\Dropbox\work\its\its\bin\Debug\its.pdb
+D:\Dropbox\work\its\its\obj\Debug\its.csprojResolveAssemblyReference.cache
+D:\Dropbox\work\its\its\obj\Debug\its.Properties.Resources.resources
+D:\Dropbox\work\its\its\obj\Debug\its.csproj.GenerateResource.Cache
+D:\Dropbox\work\its\its\obj\Debug\its.MainWindow.resources
+D:\Dropbox\work\its\its\bin\Debug\HotKeysLibrary.dll
+D:\Dropbox\work\its\its\bin\Debug\Microsoft.QualityTools.Testing.Fakes.dll
+D:\Dropbox\work\its\its\bin\Debug\HotKeysLibrary.pdb
+D:\Dropbox\work\its\its\bin\Debug\ru\Microsoft.QualityTools.Testing.Fakes.resources.dll
+d:\documents\visual studio 2012\Projects\its\its\bin\Debug\HotKeysLibrary.dll
+d:\documents\visual studio 2012\Projects\its\its\bin\Debug\Microsoft.QualityTools.Testing.Fakes.dll
+d:\documents\visual studio 2012\Projects\its\its\bin\Debug\HotKeysLibrary.pdb
+d:\documents\visual studio 2012\Projects\its\its\bin\Debug\ru\Microsoft.QualityTools.Testing.Fakes.resources.dll
+d:\documents\visual studio 2012\Projects\its\its\obj\Debug\its.MainWindow.resources
+d:\documents\visual studio 2012\Projects\its\its\obj\Debug\its.MessageWindow.resources
+D:\Dropbox\work\its\its\bin\Debug\ITSClient.exe.config

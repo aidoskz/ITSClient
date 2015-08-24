@@ -1,0 +1,9 @@
+C:\Users\bojenov\Desktop\Hooker\HotKeysLibrary\bin\Release\HotKeysLibrary.dll
+C:\Users\bojenov\Desktop\Hooker\HotKeysLibrary\bin\Release\HotKeysLibrary.pdb
+C:\Users\bojenov\Desktop\Hooker\HotKeysLibrary\obj\Release\HotKeysLibrary.dll
+C:\Users\bojenov\Desktop\Hooker\HotKeysLibrary\obj\Release\HotKeysLibrary.pdb
+C:\Users\Анатолий\Desktop\source\HotKeysLibrary\bin\Release\HotKeysLibrary.dll
+C:\Users\Анатолий\Desktop\source\HotKeysLibrary\bin\Release\HotKeysLibrary.pdb
+C:\Users\Анатолий\Desktop\source\HotKeysLibrary\obj\Release\HotKeysLibrary.csprojResolveAssemblyReference.cache
+C:\Users\Анатолий\Desktop\source\HotKeysLibrary\obj\Release\HotKeysLibrary.dll
+C:\Users\Анатолий\Desktop\source\HotKeysLibrary\obj\Release\HotKeysLibrary.pdb

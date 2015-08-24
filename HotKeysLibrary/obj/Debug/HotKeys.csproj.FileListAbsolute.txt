@@ -1,0 +1,14 @@
+D:\Dropbox\work\its\HotKeysLibrary\bin\Debug\HotKeys.dll
+D:\Dropbox\work\its\HotKeysLibrary\bin\Debug\HotKeys.pdb
+D:\Dropbox\work\its\HotKeysLibrary\obj\Debug\HotKeys.dll
+D:\Dropbox\work\its\HotKeysLibrary\obj\Debug\HotKeys.pdb
+\\sychev\Шара\ITSClient\HotKeysLibrary\bin\Debug\HotKeys.dll
+\\sychev\Шара\ITSClient\HotKeysLibrary\bin\Debug\HotKeys.pdb
+\\sychev\Шара\ITSClient\HotKeysLibrary\obj\Debug\HotKeys.csprojResolveAssemblyReference.cache
+\\sychev\Шара\ITSClient\HotKeysLibrary\obj\Debug\HotKeys.dll
+\\sychev\Шара\ITSClient\HotKeysLibrary\obj\Debug\HotKeys.pdb
+C:\Users\a.kakimzhanov\Desktop\RedButton\ITSClient\HotKeysLibrary\bin\Debug\HotKeys.dll
+C:\Users\a.kakimzhanov\Desktop\RedButton\ITSClient\HotKeysLibrary\bin\Debug\HotKeys.pdb
+C:\Users\a.kakimzhanov\Desktop\RedButton\ITSClient\HotKeysLibrary\obj\Debug\HotKeys.csprojResolveAssemblyReference.cache
+C:\Users\a.kakimzhanov\Desktop\RedButton\ITSClient\HotKeysLibrary\obj\Debug\HotKeys.dll
+C:\Users\a.kakimzhanov\Desktop\RedButton\ITSClient\HotKeysLibrary\obj\Debug\HotKeys.pdb
