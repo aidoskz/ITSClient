@@ -70,3 +70,10 @@ C:\Users\a.kakimzhanov\Documents\GitHub\ITSClient\its\obj\Debug\ITSClient.Messag
 C:\Users\a.kakimzhanov\Documents\GitHub\ITSClient\its\obj\Debug\ITSClient.Properties.Resources.resources
 C:\Users\a.kakimzhanov\Documents\GitHub\ITSClient\its\obj\Debug\ITSClient.Remove.resources
 C:\Users\a.kakimzhanov\Documents\GitHub\ITSClient\its\obj\Debug\ITSClient.csproj.GenerateResource.Cache
+C:\Users\a.kakimzhanov\Documents\GitHub\ITSClient\its\bin\Debug\Newtonsoft.Json.dll
+C:\Users\a.kakimzhanov\Documents\GitHub\ITSClient\its\bin\Debug\SocketIOClient.dll
+C:\Users\a.kakimzhanov\Documents\GitHub\ITSClient\its\bin\Debug\WebSocket4Net.dll
+C:\Users\a.kakimzhanov\Documents\GitHub\ITSClient\its\bin\Debug\Newtonsoft.Json.pdb
+C:\Users\a.kakimzhanov\Documents\GitHub\ITSClient\its\bin\Debug\Newtonsoft.Json.xml
+C:\Users\a.kakimzhanov\Documents\GitHub\ITSClient\its\bin\Debug\SocketIOClient.pdb
+C:\Users\a.kakimzhanov\Documents\GitHub\ITSClient\its\bin\Debug\SocketIOClient.xml

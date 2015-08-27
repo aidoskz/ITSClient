@@ -10,7 +10,9 @@ using System.Net;
 using System.Runtime.InteropServices;
 using WinApi;
 using HotKeysLibrary;
-using System.Net.Sockets;
+using System.IO;
+using System.Security.Cryptography;
+using WebSocket4Net;
 
 namespace ITSClient
 {
@@ -24,12 +26,36 @@ namespace ITSClient
         public string nameUser;
         public string ipAdress;
         public string nameMachine;
+ 
 
+        public WebSocket websocket = new WebSocket("ws://storage.ktga.kz:8001/");
+        
         HotKeysManager manager = new HotKeysManager();
 
         #endregion
 
         #region ПРОЦЕДУРЫ И ФУНКЦИИ ОБЩЕГО НАЗНАЧЕНИЯ
+
+        private void websocket_Opened(object sender, EventArgs e)
+        {
+            websocket.Send("Hello World!");
+        }
+
+        public void websocket_Error(object sender, EventArgs e)
+        {
+            websocket.Send("websocket_Error");
+        }
+
+        public void websocket_Closed(object sender, EventArgs e)
+        {
+            websocket.Send("websocket_Closed");
+        }
+
+        public void websocket_MessageReceived(object sender, EventArgs e)
+        {
+            websocket.Send("websocket_MessageReceived");
+        }
+
 
         private string GetIPAdress()
         {
@@ -57,6 +83,74 @@ namespace ITSClient
                                        CopyPixelOperation.SourceCopy);
             return bmpScreenShot;
         }
+
+
+        static string getMd5Hash(string input)
+        {
+            // Create a new instance of the MD5CryptoServiceProvider object.
+            MD5 md5Hasher = MD5.Create();
+
+            // Convert the input string to a byte array and compute the hash.
+            byte[] data = md5Hasher.ComputeHash(Encoding.Default.GetBytes(input));
+
+            // Create a new Stringbuilder to collect the bytes
+            // and create a string.
+            StringBuilder sBuilder = new StringBuilder();
+
+            // Loop through each byte of the hashed data 
+            // and format each one as a hexadecimal string.
+            for (int i = 0; i < data.Length; i++)
+            {
+                sBuilder.Append(data[i].ToString("x2"));
+            }
+
+            // Return the hexadecimal string.
+            return sBuilder.ToString();
+        }
+
+        public string GetScreenShotLink()
+        {
+            FileStream fs = new FileStream("d:\\ra.png", FileMode.Open, FileAccess.Read);
+            byte[] data = new byte[fs.Length];
+            fs.Read(data, 0, data.Length);
+            fs.Close();
+
+            // Generate HASH of links
+            string link = "/ITSClient_" + getMd5Hash(DateTime.Now.ToLongTimeString());
+
+
+            // Generate post objects
+            Dictionary<string, object> postParameters = new Dictionary<string, object>();
+            postParameters.Add("filename", "ra.png");
+            postParameters.Add("fileformat", "png");
+            postParameters.Add("file[0]", new FormUpload.FileParameter(data, "ra.png", "image/png"));
+
+            //host
+            string host = "http://storage.ktga.kz";
+
+            // Create request and receive response
+            string postURL = host + "/upload.php";
+            string userAgent = "ITSClient";
+            string referer = host + link;
+            HttpWebResponse webResponse = FormUpload.MultipartFormDataPost(postURL, userAgent, postParameters, referer);
+
+            // Process response
+            StreamReader responseReader = new StreamReader(webResponse.GetResponseStream());
+            string fullResponse = responseReader.ReadToEnd();
+            webResponse.Close();
+
+            WebRequest wrs = WebRequest.Create(referer + ".json");
+
+            WebResponse wr = wrs.GetResponse() as HttpWebResponse;
+
+            StreamReader rr = new StreamReader(wr.GetResponseStream());
+            string res = rr.ReadToEnd();
+            wr.Close();
+
+            return res;
+
+        }
+
 
         private void SendToSupport()
         {
@@ -143,9 +237,14 @@ namespace ITSClient
             nameUser = System.Environment.UserName;
             nameMachine = System.Environment.MachineName;
             ipAdress = GetIPAdress();
-           
+
             // notifyIcon.ShowBalloonTip(5000, "IT Support", ms, ToolTipIcon.Info);
 
+            websocket.Opened += new EventHandler(websocket_Opened);
+            // websocket.Error += new EventHandler<ErrorEventArgs>(websocket_Error);
+            websocket.Closed += new EventHandler(websocket_Closed);
+            //  websocket.MessageReceived += new EventHandler(websocket_MessageReceived);
+            websocket.Open();
 
             NameUser.Text = nameUser;
             TextNameMachine.Text = nameMachine;
