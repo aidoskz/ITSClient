@@ -221,14 +221,22 @@ namespace ITSClient
             ipAdress = GetIPAdress();
 
 
-            string[] data = { currentUser, nameUser, nameMachine, ipAdress };
+            var data = new Dictionary<string, string> {
+                { "currentUser", currentUser },
+                { "nameUser", nameUser },
+                { "nameMachine", nameMachine },
+                { "ipAdress", ipAdress }
+
+            };
+
+            //string[] data = { currentUser, nameUser, nameMachine, ipAdress };
 
             var javaScriptSerializer = new
             System.Web.Script.Serialization.JavaScriptSerializer();
             string jsonString = javaScriptSerializer.Serialize(data);
             Console.WriteLine(jsonString);
 
-            websocket.Send("{\"on\":\"register\",\"data\":" + jsonString + "\"}");
+            websocket.Send("{\"on\":\"register\",\"data\":" + jsonString + "}");
 
 
         }
