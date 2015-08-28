@@ -13,7 +13,8 @@ using HotKeysLibrary;
 using System.IO;
 using System.Security.Cryptography;
 using WebSocket4Net;
-
+using Newtonsoft.Json;
+ 
 namespace ITSClient
 {
     public partial class MainWindow : Form
@@ -26,7 +27,8 @@ namespace ITSClient
         public string nameUser;
         public string ipAdress;
         public string nameMachine;
- 
+        public string ScreenLink;
+        public string ScreenShotPath;
 
         public WebSocket websocket = new WebSocket("ws://storage.ktga.kz:8001/");
         
@@ -36,26 +38,7 @@ namespace ITSClient
 
         #region ПРОЦЕДУРЫ И ФУНКЦИИ ОБЩЕГО НАЗНАЧЕНИЯ
 
-        private void websocket_Opened(object sender, EventArgs e)
-        {
-            websocket.Send("Hello World!");
-        }
-
-        public void websocket_Error(object sender, EventArgs e)
-        {
-            websocket.Send("websocket_Error");
-        }
-
-        public void websocket_Closed(object sender, EventArgs e)
-        {
-            websocket.Send("websocket_Closed");
-        }
-
-        public void websocket_MessageReceived(object sender, EventArgs e)
-        {
-            websocket.Send("websocket_MessageReceived");
-        }
-
+        
 
         private string GetIPAdress()
         {
@@ -229,7 +212,47 @@ namespace ITSClient
             manager.AddHotKey(new HotKeyCombination(() => { ShowRemoveWindow(); }) { Keys.LControlKey, Keys.LShiftKey, Keys.R });
         }
 
-        
+        private void websocket_Opened(object sender, EventArgs e)
+        {
+
+            currentUser = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
+            nameUser = System.Environment.UserName;
+            nameMachine = System.Environment.MachineName;
+            ipAdress = GetIPAdress();
+
+
+            Array data = [currentUser, nameUser, nameMachine, ipAdress];
+
+            var javaScriptSerializer = new
+            System.Web.Script.Serialization.JavaScriptSerializer();
+            string jsonString = javaScriptSerializer.Serialize(data);
+            Console.WriteLine(jsonString);
+
+            websocket.Send(jsonString);
+        }
+
+        public void websocket_Error(object sender, SuperSocket.ClientEngine.ErrorEventArgs  e)
+        {
+            notifyIcon.ShowBalloonTip(5000, "IT Support", e.Exception.Message, ToolTipIcon.Error);
+        }
+
+        public void websocket_Closed(object sender, EventArgs e)
+        {
+            websocket.Send("websocket_Closed");
+        }
+
+        private void websocket_MessageReceived(object sender, MessageReceivedEventArgs e)
+        {
+
+            
+            notifyIcon.ShowBalloonTip(5000, "IT Support", e.Message, ToolTipIcon.Info);
+
+            
+            if (e.Message == "Aidos")
+            {
+                websocket.Send("Salam Aidos");
+            }
+        }
 
         private void MainWindow_Load(object sender, EventArgs e)
         {
@@ -241,15 +264,17 @@ namespace ITSClient
             // notifyIcon.ShowBalloonTip(5000, "IT Support", ms, ToolTipIcon.Info);
 
             websocket.Opened += new EventHandler(websocket_Opened);
-            // websocket.Error += new EventHandler<ErrorEventArgs>(websocket_Error);
+          //  websocket.Error += new EventHandler<ErrorEventArgs>(websocket_Error);
             websocket.Closed += new EventHandler(websocket_Closed);
-            //  websocket.MessageReceived += new EventHandler(websocket_MessageReceived);
+            websocket.MessageReceived += new EventHandler<MessageReceivedEventArgs>(websocket_MessageReceived);
             websocket.Open();
 
             NameUser.Text = nameUser;
             TextNameMachine.Text = nameMachine;
             IPAdress.Text = ipAdress;
         }
+
+
 
         private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
