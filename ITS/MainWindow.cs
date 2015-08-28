@@ -221,14 +221,16 @@ namespace ITSClient
             ipAdress = GetIPAdress();
 
 
-            Array data = [currentUser, nameUser, nameMachine, ipAdress];
+            string[] data = { currentUser, nameUser, nameMachine, ipAdress };
 
             var javaScriptSerializer = new
             System.Web.Script.Serialization.JavaScriptSerializer();
             string jsonString = javaScriptSerializer.Serialize(data);
             Console.WriteLine(jsonString);
 
-            websocket.Send(jsonString);
+            websocket.Send("{\"on\":\"register\",\"data\":" + jsonString + "\"}");
+
+
         }
 
         public void websocket_Error(object sender, SuperSocket.ClientEngine.ErrorEventArgs  e)
