@@ -14,13 +14,14 @@ using System.IO;
 using System.Security.Cryptography;
 using WebSocket4Net;
 using Newtonsoft.Json;
- 
+using Microsoft.CSharp.RuntimeBinder;
+
 namespace ITSClient
 {
     public partial class MainWindow : Form
     {
         bool exit = false;
-        
+
         #region ПЕРЕМЕННЫЕ МОДУЛЯ
 
         public string currentUser;
@@ -31,14 +32,14 @@ namespace ITSClient
         public string ScreenShotPath;
 
         public WebSocket websocket = new WebSocket("ws://storage.ktga.kz:8001/");
-        
+
         HotKeysManager manager = new HotKeysManager();
 
         #endregion
 
         #region ПРОЦЕДУРЫ И ФУНКЦИИ ОБЩЕГО НАЗНАЧЕНИЯ
 
-        
+
 
         private string GetIPAdress()
         {
@@ -48,7 +49,7 @@ namespace ITSClient
             return addr[addr.Length - 1].ToString();
         }
 
-       
+
 
         private Bitmap TakeScreenShot(Screen currentScreen)
         {
@@ -64,7 +65,9 @@ namespace ITSClient
                                        0, 0,
                                        currentScreen.Bounds.Size,
                                        CopyPixelOperation.SourceCopy);
+             
             return bmpScreenShot;
+
         }
 
 
@@ -141,7 +144,7 @@ namespace ITSClient
         }
         private void SendToSupport(bool showMessage)
         {
-            
+
             MessageWindow ms = new MessageWindow();
             DialogResult dr = ms.ShowDialog();
             if (dr != System.Windows.Forms.DialogResult.OK)
@@ -200,7 +203,7 @@ namespace ITSClient
         }
 
         #endregion
-        
+
         #region ОБРАБОТЧИКИ СОБЫТИЙ ФОРМЫ
 
         public MainWindow()
@@ -241,7 +244,7 @@ namespace ITSClient
 
         }
 
-        public void websocket_Error(object sender, SuperSocket.ClientEngine.ErrorEventArgs  e)
+        public void websocket_Error(object sender, SuperSocket.ClientEngine.ErrorEventArgs e)
         {
             notifyIcon.ShowBalloonTip(5000, "IT Support", e.Exception.Message, ToolTipIcon.Error);
         }
@@ -253,29 +256,36 @@ namespace ITSClient
 
 
         // Func<int, int> -- функция, принимающая int и возвращающая тоже int
-        public string Emit(string data, Func<string, string> f) { return  f(data); }
+        public string Emit(string data, Func<string,string>f)
+        {
+            return f(data);
+        }
 
         int getDouble(int x) { return 2 * x; }
-        
+
         public void onsay(string data)
         {
             notifyIcon.ShowBalloonTip(5000, "IT Support", "SomeBody Say", ToolTipIcon.Info);
         }
 
+        public string say(string data)
+        { 
+            notifyIcon.ShowBalloonTip(5000, "IT Support", "SomeBody Say", ToolTipIcon.Info);
+        }
 
         private void websocket_MessageReceived(object sender, MessageReceivedEventArgs e)
         {
 
-            
-            notifyIcon.ShowBalloonTip(5000, "IT Support", e.Message, ToolTipIcon.Info);
-           
 
-            // MyEvent messdata = JsonConvert.DeserializeObject<MyEvent>(e.Message);
+            notifyIcon.ShowBalloonTip(5000, "IT Support", e.Message, ToolTipIcon.Info);
+
+
+            dynamic messdata = JsonConvert.DeserializeObject(e.Message);
             // Console.WriteLine("{0} {1}", MessageData.QuestionId, MessageData.QuestionTitle);
 
-           
-            // Emit(messdata.data.ToString(),   messdata.on);
-             
+
+            Emit(messdata.data,  messdata.on);
+
 
             //            int i = 5;
             //          i = Apply(e.Message, );
@@ -296,7 +306,7 @@ namespace ITSClient
             // notifyIcon.ShowBalloonTip(5000, "IT Support", ms, ToolTipIcon.Info);
 
             websocket.Opened += new EventHandler(websocket_Opened);
-          //  websocket.Error += new EventHandler<ErrorEventArgs>(websocket_Error);
+            //  websocket.Error += new EventHandler<ErrorEventArgs>(websocket_Error);
             websocket.Closed += new EventHandler(websocket_Closed);
             websocket.MessageReceived += new EventHandler<MessageReceivedEventArgs>(websocket_MessageReceived);
             websocket.Open();
@@ -318,7 +328,7 @@ namespace ITSClient
                 ShowInTaskbar = !ShowInTaskbar;
             }
         }
-        
+
         #endregion
 
         #region ОБРАБОТЧИКИ СОБЫТИЙ ЭЛЕМЕНТОВ УПРАВЛЕНИЯ
