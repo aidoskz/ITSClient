@@ -94,9 +94,9 @@ namespace ITSClient
             return sBuilder.ToString();
         }
 
-        public string GetScreenShotLink()
+        public string GetScreenShotLink(string path)
         {
-            FileStream fs = new FileStream("d:\\ra.png", FileMode.Open, FileAccess.Read);
+            FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read);
             byte[] data = new byte[fs.Length];
             fs.Read(data, 0, data.Length);
             fs.Close();
@@ -107,9 +107,9 @@ namespace ITSClient
 
             // Generate post objects
             Dictionary<string, object> postParameters = new Dictionary<string, object>();
-            postParameters.Add("filename", "ra.png");
+            postParameters.Add("filename", "1.png");
             postParameters.Add("fileformat", "png");
-            postParameters.Add("file[0]", new FormUpload.FileParameter(data, "ra.png", "image/png"));
+            postParameters.Add("file[0]", new FormUpload.FileParameter(data, "1.png", "image/png"));
 
             //host
             string host = "http://storage.ktga.kz";
@@ -125,16 +125,28 @@ namespace ITSClient
             string fullResponse = responseReader.ReadToEnd();
             webResponse.Close();
 
-            WebRequest wrs = WebRequest.Create(referer + ".json");
+            //WebRequest wrs = WebRequest.Create(referer + ".json");
+
+            //WebResponse wr = wrs.GetResponse() as HttpWebResponse;
+
+            //StreamReader rr = new StreamReader(wr.GetResponseStream());
+            //string res = rr.ReadToEnd();
+            //wr.Close();
+
+            return referer;
+
+        }
+
+        public string GetJsonFromLink(string link) {
+
+            WebRequest wrs = WebRequest.Create(link + ".json");
 
             WebResponse wr = wrs.GetResponse() as HttpWebResponse;
 
             StreamReader rr = new StreamReader(wr.GetResponseStream());
             string res = rr.ReadToEnd();
             wr.Close();
-
             return res;
-
         }
 
 
@@ -186,6 +198,7 @@ namespace ITSClient
                 {
                     Image img = TakeScreenShot(scr);
                     img.Save(String.Format(@"{0}{1}.png", path, scr.DeviceName.Substring(scr.DeviceName.Length - 1)), System.Drawing.Imaging.ImageFormat.Png);
+
                 }
 
                 notifyIcon.ShowBalloonTip(5000, "IT Support", "Обращение отправлено", ToolTipIcon.Info);
@@ -256,44 +269,97 @@ namespace ITSClient
 
 
         // Func<int, int> -- функция, принимающая int и возвращающая тоже int
-        public string Emit(string data, Func<string,string>f)
-        {
-            return f(data);
-        }
+        //public Emit<T>(string data, Func<string,T>f)
+        //{
+        //    return f(data);
+        //}
 
-        int getDouble(int x) { return 2 * x; }
+        //int getDouble(int x) { return 2 * x; }
 
-        public void onsay(string data)
-        {
-            notifyIcon.ShowBalloonTip(5000, "IT Support", "SomeBody Say", ToolTipIcon.Info);
-        }
+        //public delegate F( string x); // как бы typedef
+        //void DoAction( string x, F f) { f( x); }
 
-        public string say(string data)
-        { 
-            notifyIcon.ShowBalloonTip(5000, "IT Support", "SomeBody Say", ToolTipIcon.Info);
-        }
+        //void makeDouble(ref int x) { x = 2 * x; }
+        //int i = 5;
+        //DoAction(ref i, makeDouble);
+
+        //public void onsay(string data)
+        //{
+        //    notifyIcon.ShowBalloonTip(5000, "IT Support", "SomeBody Say", ToolTipIcon.Info);
+        //}
+
+        //public string say(string data)
+        //{ 
+        //    notifyIcon.ShowBalloonTip(5000, "IT Support", "SomeBody Say", ToolTipIcon.Info);
+        //    return "yes";
+
+        //}
 
         private void websocket_MessageReceived(object sender, MessageReceivedEventArgs e)
         {
 
 
-            notifyIcon.ShowBalloonTip(5000, "IT Support", e.Message, ToolTipIcon.Info);
+           // notifyIcon.ShowBalloonTip(5000, "IT Support", e.Message, ToolTipIcon.Info);
 
 
-            dynamic messdata = JsonConvert.DeserializeObject(e.Message);
+            MyEvent messdata = JsonConvert.DeserializeObject<MyEvent>(e.Message);
             // Console.WriteLine("{0} {1}", MessageData.QuestionId, MessageData.QuestionTitle);
 
+            //notifyIcon.ShowBalloonTip(5000, "IT Support", messdata.on.ToString(), ToolTipIcon.Info);
+            //string mess = messdata.on.ToString(); 
+            //Emit(messdata.data, messdata.on );
 
-            Emit(messdata.data,  messdata.on);
+            //Action<string> emit = this.;
+            //emit(messdata.data);
 
+            //            DoAction(messdata.data, messdata.on);
 
             //            int i = 5;
             //          i = Apply(e.Message, );
 
-            //if (e.Message == "Aidos")
-            //{
-            //    websocket.Send("Salam Aidos");
-            //}
+            switch (messdata.on)
+            {
+                case "say":
+                    notifyIcon.ShowBalloonTip(5000, "IT Support->Server Say", messdata.data.ToString(), ToolTipIcon.Info);
+
+
+                    break;
+                case "takescreen":
+
+
+                    List<string> links = new List<string>();
+ 
+                    // Определим конечный каталог расположения файлов
+                    string path = String.Format(@"C:\ITS{0}\", Guid.NewGuid());//{1}\", currentUser, DateTime.Now.ToString("yyyy-MM-dd-hh-mm-ss"));
+                    if (!System.IO.Directory.Exists(path))
+                    {
+                        System.IO.Directory.CreateDirectory(path);
+                    }
+
+                    // Перебираем все мониторы и сохраним в туже директорию
+                    foreach (Screen scr in Screen.AllScreens)
+                    {
+                        Image img = TakeScreenShot(scr);
+                        string fullpath = String.Format(@"{0}{1}.png", path, scr.DeviceName.Substring(scr.DeviceName.Length - 1));
+                        img.Save(fullpath, System.Drawing.Imaging.ImageFormat.Png);
+                         
+                        links.Add(GetScreenShotLink(fullpath));
+
+                    }
+
+                    string[] linkarray = links.ToArray();
+
+                    var javaScriptSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+                    string jsonString = javaScriptSerializer.Serialize(linkarray);
+                    Console.WriteLine(jsonString);
+                     
+                    websocket.Send("{\"on\":\"screenlink\",\"data\":"+ jsonString + "}");
+                    notifyIcon.ShowBalloonTip(5000, "IT Support", "Скриншот отправлен в сервер", ToolTipIcon.Info);
+                    break;
+                default:
+                    notifyIcon.ShowBalloonTip(5000, "IT Support", e.Message, ToolTipIcon.Info);
+                    break;
+            }
         }
 
         private void MainWindow_Load(object sender, EventArgs e)
