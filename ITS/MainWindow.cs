@@ -251,17 +251,39 @@ namespace ITSClient
             websocket.Send("websocket_Closed");
         }
 
+
+        // Func<int, int> -- функция, принимающая int и возвращающая тоже int
+        public string Emit(string data, Func<string, string> f) { return  f(data); }
+
+        int getDouble(int x) { return 2 * x; }
+        
+        public void onsay(string data)
+        {
+            notifyIcon.ShowBalloonTip(5000, "IT Support", "SomeBody Say", ToolTipIcon.Info);
+        }
+
+
         private void websocket_MessageReceived(object sender, MessageReceivedEventArgs e)
         {
 
             
             notifyIcon.ShowBalloonTip(5000, "IT Support", e.Message, ToolTipIcon.Info);
+           
 
-            
-            if (e.Message == "Aidos")
-            {
-                websocket.Send("Salam Aidos");
-            }
+            // MyEvent messdata = JsonConvert.DeserializeObject<MyEvent>(e.Message);
+            // Console.WriteLine("{0} {1}", MessageData.QuestionId, MessageData.QuestionTitle);
+
+           
+            // Emit(messdata.data.ToString(),   messdata.on);
+             
+
+            //            int i = 5;
+            //          i = Apply(e.Message, );
+
+            //if (e.Message == "Aidos")
+            //{
+            //    websocket.Send("Salam Aidos");
+            //}
         }
 
         private void MainWindow_Load(object sender, EventArgs e)
