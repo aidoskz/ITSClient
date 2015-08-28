@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+        <title></title>
+ 
+    </head>
+    <body>
+      <input type="text" id="input" autofocus><input type="submit" id="send" value="Send">
+        <div id="log"></div>
+
+
+        <script type="text/javascript">
+
+             function isJson(str) {
+                try {
+                    JSON.parse(str);
+                } catch (e) {
+                    return false;
+                }
+                return true;
+            }
+
+            function print_r(arr, level) {
+    var print_red_text = "";
+    if(!level) level = 0;
+    var level_padding = "";
+    for(var j=0; j<level+1; j++) level_padding += "    ";
+    if(typeof(arr) == 'object') {
+        for(var item in arr) {
+            var value = arr[item];
+            if(typeof(value) == 'object') {
+                print_red_text += level_padding + "'" + item + "' :\n";
+                print_red_text += print_r(value,level+1);
+        } 
+            else 
+                print_red_text += level_padding + "'" + item + "' => \"" + value + "\"\n";
+        }
+    } 
+
+    else  print_red_text = "===>"+arr+"<===("+typeof(arr)+")";
+    return print_red_text;
+}
+
+            function log(e){
+                console.log(e);
+                if(isJson(e)){
+                    text = print_r(e);
+                }else{
+                    text = e;
+                }
+                $('#log').append(text+'<br>');
+
+            }
+
+
+            log('start');
+
+            client = new WebSocket('ws://storage.ktga.kz:8001');
+
+            client.emit = function(event,data){
+
+                funcName = "on" + event;
+
+                this.addEventListener(funcName,client[funcName](data),false);
+                 //this.call(eventName(data));
+
+            }
+
+            client.ononline = function(data){
+               headers = print_r(data);
+               onlinedata = data;
+               log(headers);
+               // console.log('data' );
+               // console.log('header' );
+
+            }
+
+
+            client.onmessage=function(str){
+                if(isJson(str.data)){
+                    Message = JSON.parse(str.data);
+                    client.emit(Message.on, Message.data)
+               }else{
+                    log(str);
+               }
+             }
+
+
+             $('#send').on('click', function(e){
+                client.send(JSON.stringify({'on':'all','data':$('#input').val()}));
+                $('#input').val('');
+             })
+
+             //setInterval( function(){client.send(JSON.stringify({"on":"online","data":"who"}))}, 1000)
+
+        </script>
+
+      
+    </body>
+</html>
