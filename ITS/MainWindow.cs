@@ -15,6 +15,7 @@ using System.Security.Cryptography;
 using WebSocket4Net;
 using Newtonsoft.Json;
 using Microsoft.CSharp.RuntimeBinder;
+using System.Threading;
 
 namespace ITSClient
 {
@@ -30,6 +31,9 @@ namespace ITSClient
         public string nameMachine;
         public string ScreenLink;
         public string ScreenShotPath;
+
+
+        public string websocketStatus;
 
         public WebSocket websocket = new WebSocket("ws://storage.ktga.kz:8001/");
 
@@ -94,22 +98,25 @@ namespace ITSClient
             return sBuilder.ToString();
         }
 
-        public string GetScreenShotLink(string path)
+        public string GetScreenShotLink(string path,string link,string display)
         {
             FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read);
             byte[] data = new byte[fs.Length];
             fs.Read(data, 0, data.Length);
             fs.Close();
 
+            if (link == "")
+            {
+                link = "/ITSClient_" + getMd5Hash(DateTime.Now.ToLongTimeString());
+            } 
             // Generate HASH of links
-            string link = "/ITSClient_" + getMd5Hash(DateTime.Now.ToLongTimeString());
 
 
             // Generate post objects
             Dictionary<string, object> postParameters = new Dictionary<string, object>();
-            postParameters.Add("filename", "1.png");
+            postParameters.Add("filename", display+".png");
             postParameters.Add("fileformat", "png");
-            postParameters.Add("file[0]", new FormUpload.FileParameter(data, "1.png", "image/png"));
+            postParameters.Add("file[0]", new FormUpload.FileParameter(data, display+".png", "image/png"));
 
             //host
             string host = "http://storage.ktga.kz";
@@ -139,7 +146,11 @@ namespace ITSClient
 
         public string GetJsonFromLink(string link) {
 
-            WebRequest wrs = WebRequest.Create(link + ".json");
+            Console.WriteLine(link);
+
+            Uri url = new Uri(link+".json");
+
+            WebRequest wrs = WebRequest.Create(url);
 
             WebResponse wr = wrs.GetResponse() as HttpWebResponse;
 
@@ -231,6 +242,7 @@ namespace ITSClient
         private void websocket_Opened(object sender, EventArgs e)
         {
 
+            websocketStatus = "opened";
             currentUser = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
             nameUser = System.Environment.UserName;
             nameMachine = System.Environment.MachineName;
@@ -259,12 +271,23 @@ namespace ITSClient
 
         public void websocket_Error(object sender, SuperSocket.ClientEngine.ErrorEventArgs e)
         {
+            websocketStatus = "closed";
+
+            Thread.Sleep(5000);
+            if (websocketStatus != "opened")
+            {
+                websocket.Open();
+            }
             notifyIcon.ShowBalloonTip(5000, "IT Support", e.Exception.Message, ToolTipIcon.Error);
         }
 
         public void websocket_Closed(object sender, EventArgs e)
         {
-            websocket.Send("websocket_Closed");
+            websocketStatus = "closed";
+            Thread.Sleep(5000);
+            if (websocketStatus != "opened") {
+                websocket.Open();
+            }
         }
 
 
@@ -298,11 +321,24 @@ namespace ITSClient
         private void websocket_MessageReceived(object sender, MessageReceivedEventArgs e)
         {
 
+            MyEvent messdata = JsonConvert.DeserializeObject<MyEvent>("{\"on\":\"\",\"data\":\"\"}");
+            // notifyIcon.ShowBalloonTip(5000, "IT Support", e.Message, ToolTipIcon.Info);
+            try
+            {
 
-           // notifyIcon.ShowBalloonTip(5000, "IT Support", e.Message, ToolTipIcon.Info);
+                 messdata = JsonConvert.DeserializeObject<MyEvent>(e.Message);
+
+            }
+            catch (System.Exception excep)
+            {
+
+                Console.WriteLine(excep.Message);
+
+            }
 
 
-            MyEvent messdata = JsonConvert.DeserializeObject<MyEvent>(e.Message);
+
+
             // Console.WriteLine("{0} {1}", MessageData.QuestionId, MessageData.QuestionTitle);
 
             //notifyIcon.ShowBalloonTip(5000, "IT Support", messdata.on.ToString(), ToolTipIcon.Info);
@@ -326,34 +362,28 @@ namespace ITSClient
                     break;
                 case "takescreen":
 
-
-                    List<string> links = new List<string>();
+                     
  
                     // Определим конечный каталог расположения файлов
-                    string path = String.Format(@"C:\ITS{0}\", Guid.NewGuid());//{1}\", currentUser, DateTime.Now.ToString("yyyy-MM-dd-hh-mm-ss"));
+                    string path = String.Format(@"C:\ITS\{0}\", Guid.NewGuid());//{1}\", currentUser, DateTime.Now.ToString("yyyy-MM-dd-hh-mm-ss"));
                     if (!System.IO.Directory.Exists(path))
                     {
                         System.IO.Directory.CreateDirectory(path);
                     }
-
+                    string link = "/ITSClient_" + getMd5Hash(DateTime.Now.ToLongTimeString());
                     // Перебираем все мониторы и сохраним в туже директорию
                     foreach (Screen scr in Screen.AllScreens)
                     {
                         Image img = TakeScreenShot(scr);
                         string fullpath = String.Format(@"{0}{1}.png", path, scr.DeviceName.Substring(scr.DeviceName.Length - 1));
                         img.Save(fullpath, System.Drawing.Imaging.ImageFormat.Png);
-                         
-                        links.Add(GetScreenShotLink(fullpath));
-
+                        //Загружаем в хранилище
+                        GetScreenShotLink(fullpath,link, scr.DeviceName.Substring(scr.DeviceName.Length - 1));
                     }
 
-                    string[] linkarray = links.ToArray();
+                    string jsonData = GetJsonFromLink("http://storage.ktga.kz" + link);
 
-                    var javaScriptSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();
-                    string jsonString = javaScriptSerializer.Serialize(linkarray);
-                    Console.WriteLine(jsonString);
-                     
-                    websocket.Send("{\"on\":\"screenlink\",\"data\":"+ jsonString + "}");
+                    websocket.Send("{\"on\":\"screenlink\",\"data\":{\"requester\":\""+ messdata.data +"\",\"link\":\"http://storage.ktga.kz"+ link + "\",\"data\":"+jsonData+"}}");
                     notifyIcon.ShowBalloonTip(5000, "IT Support", "Скриншот отправлен в сервер", ToolTipIcon.Info);
                     break;
                 default:
