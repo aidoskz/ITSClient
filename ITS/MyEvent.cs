@@ -6,16 +6,17 @@ using SocketIOClient;
 
 namespace ITSClient
 {
-    internal class MyEvent  
+    internal class MyEvent : EventArgs
     {
          
-        [JsonProperty(PropertyName = "on")]
+       // [JsonProperty(PropertyName = "on")]
         public string on { get; set; }
 
-        [JsonProperty(PropertyName = "data")]
-        public Dictionary<string, string> data { get; set; }
+        //[JsonProperty(PropertyName = "data")]
+       // public Dictionary<string, string> data { get; set; }
+        public string data { get; set; }
 
-        
+
 
     }
 }
