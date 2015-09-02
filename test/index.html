@@ -57,6 +57,9 @@
 
             log('start');
 
+
+            initsocket = (function(){
+
             client = new WebSocket('ws://storage.ktga.kz:8001');
 
             client.emit = function(event,data){
@@ -77,6 +80,17 @@
 
             }
 
+            client.onscreenlink = function(data){
+             log(data); 
+            }
+
+            client.ontakescreen = function(data){
+             log(data); 
+            }
+
+            client.onsay = function(data){
+             alert(data); 
+            }
 
             client.onmessage=function(str){
                 if(isJson(str.data)){
@@ -87,11 +101,43 @@
                }
              }
 
+            client.onclose = function (){
+                initsocket();
+            }
 
+            });
+
+            initsocket();
              $('#send').on('click', function(e){
                 client.send(JSON.stringify({'on':'all','data':$('#input').val()}));
                 $('#input').val('');
              })
+
+             switch ( Notification.permission.toLowerCase() ) {
+    case "granted":
+        // можно
+console.log("можно");
+        break;
+
+    case "denied":
+        // нельзя
+console.log("нелзя");
+        break;
+
+    case "default":
+console.log("Спросит");
+var currentPermission;
+Notification.requestPermission( function(result) { currentPermission = result  } );
+        // спросить
+}
+
+            if(Notification.permission.toLowerCase=="granted"){
+                var mailNotification = new Notification("Айдос Какимжанов", {
+                    tag : "ache-mail",
+                    body : "Салам",
+                    icon : "http://habrastorage.org/storage2/cf9/50b/e87/cf950be87f8c34e63c07217a009f1d17.jpg"
+                });
+            }
 
              //setInterval( function(){client.send(JSON.stringify({"on":"online","data":"who"}))}, 1000)
 
