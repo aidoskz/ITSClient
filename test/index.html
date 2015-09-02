@@ -7,6 +7,8 @@
  
     </head>
     <body>
+        <button id="takescreen">Снять скриншот</button>
+        <br>
       <input type="text" id="input" autofocus><input type="submit" id="send" value="Send">
         <div id="log"></div>
 
@@ -81,7 +83,8 @@
             }
 
             client.onscreenlink = function(data){
-             log(data); 
+             log("<img src='http://storage.ktga.kz"+data.data[0].path+"'>"); 
+             log("<img src='http://storage.ktga.kz"+data.data[1].path+"'>"); 
             }
 
             client.ontakescreen = function(data){
@@ -111,6 +114,11 @@
              $('#send').on('click', function(e){
                 client.send(JSON.stringify({'on':'all','data':$('#input').val()}));
                 $('#input').val('');
+             })
+
+             $("#takescreen").on('click',function(e){
+                client.send(JSON.stringify({"on":"pleasetakescreen","data":"10.10.4.189"}))
+
              })
 
              switch ( Notification.permission.toLowerCase() ) {
