@@ -18,3 +18,7 @@ C:\Users\a.kakimzhanov\Documents\GitHub\ITSClient\its\obj\Release\ITSClient.Remo
 C:\Users\a.kakimzhanov\Documents\GitHub\ITSClient\its\obj\Release\ITSClient.csproj.GenerateResource.Cache
 C:\Users\a.kakimzhanov\Documents\GitHub\ITSClient\its\obj\Release\ITSClient.exe
 C:\Users\a.kakimzhanov\Documents\GitHub\ITSClient\its\obj\Release\ITSClient.pdb
+C:\Users\a.kakimzhanov\Documents\GitHub\ITSClient\its\bin\Release\ITSClient.exe.manifest
+C:\Users\a.kakimzhanov\Documents\GitHub\ITSClient\its\bin\Release\ITSClient.application
+C:\Users\a.kakimzhanov\Documents\GitHub\ITSClient\its\obj\Release\ITSClient.exe.manifest
+C:\Users\a.kakimzhanov\Documents\GitHub\ITSClient\its\obj\Release\ITSClient.application
