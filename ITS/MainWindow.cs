@@ -236,7 +236,7 @@ namespace ITSClient
 
             manager.AddHotKey(new HotKeyCombination(() => { SendToSupport(); }) { Keys.LControlKey, Keys.F5 });
             manager.AddHotKey(new HotKeyCombination(() => { exit = true; Application.Exit(); }) { Keys.LControlKey, Keys.RControlKey, Keys.D });
-            manager.AddHotKey(new HotKeyCombination(() => { ShowRemoveWindow(); }) { Keys.LControlKey, Keys.LShiftKey, Keys.R });
+            //manager.AddHotKey(new HotKeyCombination(() => { ShowRemoveWindow(); }) { Keys.LControlKey, Keys.LShiftKey, Keys.R });
         }
 
         private void websocket_Opened(object sender, EventArgs e)
