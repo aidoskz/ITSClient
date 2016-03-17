@@ -42,7 +42,7 @@ namespace ITSClient
         #endregion
 
         #region ПРОЦЕДУРЫ И ФУНКЦИИ ОБЩЕГО НАЗНАЧЕНИЯ
-
+ 
 
 
         private string GetIPAdress()
@@ -233,9 +233,8 @@ namespace ITSClient
         public MainWindow()
         {
             InitializeComponent();
-
             manager.AddHotKey(new HotKeyCombination(() => { SendToSupport(); }) { Keys.LControlKey, Keys.F5 });
-            manager.AddHotKey(new HotKeyCombination(() => { exit = true; Application.Exit(); }) { Keys.LControlKey, Keys.RControlKey, Keys.D });
+            //manager.AddHotKey(new HotKeyCombination(() => { exit = true; Application.Exit(); }) { Keys.LControlKey, Keys.RControlKey, Keys.D });
             //manager.AddHotKey(new HotKeyCombination(() => { ShowRemoveWindow(); }) { Keys.LControlKey, Keys.LShiftKey, Keys.R });
         }
 
@@ -321,23 +320,7 @@ namespace ITSClient
         private void websocket_MessageReceived(object sender, MessageReceivedEventArgs e)
         {
 
-            MyEvent messdata = JsonConvert.DeserializeObject<MyEvent>("{\"on\":\"\",\"data\":\"\"}");
-            // notifyIcon.ShowBalloonTip(5000, "IT Support", e.Message, ToolTipIcon.Info);
-            try
-            {
-
-                 messdata = JsonConvert.DeserializeObject<MyEvent>(e.Message);
-
-            }
-            catch (System.Exception excep)
-            {
-
-                Console.WriteLine(excep.Message);
-
-            }
-
-
-
+ 
 
             // Console.WriteLine("{0} {1}", MessageData.QuestionId, MessageData.QuestionTitle);
 
@@ -353,43 +336,90 @@ namespace ITSClient
             //            int i = 5;
             //          i = Apply(e.Message, );
 
-            switch (messdata.on)
-            {
-                case "say":
-                    notifyIcon.ShowBalloonTip(5000, "IT Support->Server Say", messdata.data.ToString(), ToolTipIcon.Info);
 
+            dynamic messdata = JsonConvert.DeserializeObject(e.Message.ToString());
+            try
+            { 
 
-                    break;
-                case "takescreen":
+                if (messdata.on != "")
+                {
 
-                     
+                    if (messdata.on == "say")
+                    {
+
+                        notifyIcon.ShowBalloonTip(5000, "IT Support Сервер", messdata.data.ToString(), ToolTipIcon.Info);
+                        
+
+                    }
+                    else if(messdata.on == "takescreen")
+                    {
+                        //Определим конечный каталог расположения файлов
+                                string path = String.Format(@"C:\ITS\{0}\", Guid.NewGuid());//{1}\", currentUser, DateTime.Now.ToString("yyyy-MM-dd-hh-mm-ss"));
+                        if (!System.IO.Directory.Exists(path))
+                        {
+                            System.IO.Directory.CreateDirectory(path);
+                        }
+                        string link = "/ITSClient_" + getMd5Hash(DateTime.Now.ToLongTimeString());
+                        // Перебираем все мониторы и сохраним в туже директорию
+                        foreach (Screen scr in Screen.AllScreens)
+                        {
+                            Image img = TakeScreenShot(scr);
+                            string fullpath = String.Format(@"{0}{1}.png", path, scr.DeviceName.Substring(scr.DeviceName.Length - 1));
+                            img.Save(fullpath, System.Drawing.Imaging.ImageFormat.Png);
+                            //Загружаем в хранилище
+                            GetScreenShotLink(fullpath, link, scr.DeviceName.Substring(scr.DeviceName.Length - 1));
+                        }
+
+                        string jsonData = GetJsonFromLink("http://storage.ktga.kz" + link);
+
+                        websocket.Send("{\"on\":\"screenlink\",\"data\":{\"requester\":\"" + messdata.data + "\",\"link\":\"http://storage.ktga.kz" + link + "\",\"data\":" + jsonData + "}}");
+                        notifyIcon.ShowBalloonTip(5000, "IT Support", "Скриншот отправлен в сервер", ToolTipIcon.Info);
+                    }
+                    else if(messdata.on == "calltoyou")
+                    {
  
-                    // Определим конечный каталог расположения файлов
-                    string path = String.Format(@"C:\ITS\{0}\", Guid.NewGuid());//{1}\", currentUser, DateTime.Now.ToString("yyyy-MM-dd-hh-mm-ss"));
-                    if (!System.IO.Directory.Exists(path))
-                    {
-                        System.IO.Directory.CreateDirectory(path);
-                    }
-                    string link = "/ITSClient_" + getMd5Hash(DateTime.Now.ToLongTimeString());
-                    // Перебираем все мониторы и сохраним в туже директорию
-                    foreach (Screen scr in Screen.AllScreens)
-                    {
-                        Image img = TakeScreenShot(scr);
-                        string fullpath = String.Format(@"{0}{1}.png", path, scr.DeviceName.Substring(scr.DeviceName.Length - 1));
-                        img.Save(fullpath, System.Drawing.Imaging.ImageFormat.Png);
-                        //Загружаем в хранилище
-                        GetScreenShotLink(fullpath,link, scr.DeviceName.Substring(scr.DeviceName.Length - 1));
-                    }
 
-                    string jsonData = GetJsonFromLink("http://storage.ktga.kz" + link);
 
-                    websocket.Send("{\"on\":\"screenlink\",\"data\":{\"requester\":\""+ messdata.data +"\",\"link\":\"http://storage.ktga.kz"+ link + "\",\"data\":"+jsonData+"}}");
-                    notifyIcon.ShowBalloonTip(5000, "IT Support", "Скриншот отправлен в сервер", ToolTipIcon.Info);
-                    break;
-                default:
-                    notifyIcon.ShowBalloonTip(5000, "IT Support", e.Message, ToolTipIcon.Info);
-                    break;
+
+
+                        Form f1 = Application.OpenForms["DialForm"];
+
+                        if (f1 != null)
+                        {
+                             
+                            //f1.Close();
+                        }
+                        else
+                        {
+                            DialForm dialForm = Program.dialForm;
+                            foreach (string issue in messdata.data.issues)
+                            {
+                                dialForm.ProjectList.Items.Add(issue);
+                            }
+                            dialForm.CallerId.Text = "Звонок от: " + messdata.data.callerid.ToString();
+                            dialForm.ShowDialog();
+
+                        }
+
+
+
+                    }
+                    else
+                    {
+                        notifyIcon.ShowBalloonTip(5000, "IT Support", e.Message.ToString(), ToolTipIcon.Info);
+                    }
+ 
+
+                }
+
             }
+            catch (System.Exception excep)
+            {
+                Console.WriteLine(excep.Message);
+            }
+
+           
+
         }
 
         private void MainWindow_Load(object sender, EventArgs e)
@@ -399,10 +429,8 @@ namespace ITSClient
             nameMachine = System.Environment.MachineName;
             ipAdress = GetIPAdress();
 
-            // notifyIcon.ShowBalloonTip(5000, "IT Support", ms, ToolTipIcon.Info);
-
+         
             websocket.Opened += new EventHandler(websocket_Opened);
-            //  websocket.Error += new EventHandler<ErrorEventArgs>(websocket_Error);
             websocket.Closed += new EventHandler(websocket_Closed);
             websocket.MessageReceived += new EventHandler<MessageReceivedEventArgs>(websocket_MessageReceived);
             websocket.Open();
@@ -451,7 +479,8 @@ namespace ITSClient
             ShowInTaskbar = !ShowInTaskbar;
         }
 
-        #endregion
 
+        #endregion
+ 
     }
 }
