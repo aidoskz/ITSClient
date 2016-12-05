@@ -35,7 +35,7 @@ namespace ITSClient
 
         public string websocketStatus;
 
-        public WebSocket websocket = new WebSocket("ws://storage.ktga.kz:8001/");
+        public WebSocket websocket = new WebSocket("wss://api.ktg.kz:8001/", origin: "http://api.ktg.kz");
 
         HotKeysManager manager = new HotKeysManager();
 
@@ -322,7 +322,7 @@ namespace ITSClient
 
  
 
-            // Console.WriteLine("{0} {1}", MessageData.QuestionId, MessageData.QuestionTitle);
+            Console.WriteLine(e.Message.ToString());
 
             //notifyIcon.ShowBalloonTip(5000, "IT Support", messdata.on.ToString(), ToolTipIcon.Info);
             //string mess = messdata.on.ToString(); 
@@ -348,8 +348,7 @@ namespace ITSClient
                     {
 
                         notifyIcon.ShowBalloonTip(5000, "IT Support Сервер", messdata.data.ToString(), ToolTipIcon.Info);
-                        
-
+                         
                     }
                     else if(messdata.on == "takescreen")
                     {
@@ -374,6 +373,10 @@ namespace ITSClient
 
                         websocket.Send("{\"on\":\"screenlink\",\"data\":{\"requester\":\"" + messdata.data + "\",\"link\":\"http://storage.ktga.kz" + link + "\",\"data\":" + jsonData + "}}");
                         notifyIcon.ShowBalloonTip(5000, "IT Support", "Скриншот отправлен в сервер", ToolTipIcon.Info);
+                    }
+                    else if (messdata.on == "open_url")
+                    {
+                        System.Diagnostics.Process.Start(messdata.data.ToString());
                     }
                     else if(messdata.on == "calltoyou")
                     {
