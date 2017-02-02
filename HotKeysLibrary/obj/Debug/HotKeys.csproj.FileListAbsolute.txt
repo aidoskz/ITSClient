@@ -12,3 +12,9 @@ C:\Users\a.kakimzhanov\Desktop\RedButton\ITSClient\HotKeysLibrary\bin\Debug\HotK
 C:\Users\a.kakimzhanov\Desktop\RedButton\ITSClient\HotKeysLibrary\obj\Debug\HotKeys.csprojResolveAssemblyReference.cache
 C:\Users\a.kakimzhanov\Desktop\RedButton\ITSClient\HotKeysLibrary\obj\Debug\HotKeys.dll
 C:\Users\a.kakimzhanov\Desktop\RedButton\ITSClient\HotKeysLibrary\obj\Debug\HotKeys.pdb
+C:\Users\a.kakimzhanov\Documents\GitHub\ITSClient\HotKeysLibrary\bin\Debug\HotKeys.dll
+C:\Users\a.kakimzhanov\Documents\GitHub\ITSClient\HotKeysLibrary\bin\Debug\HotKeys.pdb
+C:\Users\a.kakimzhanov\Documents\GitHub\ITSClient\HotKeysLibrary\obj\Debug\HotKeys.dll
+C:\Users\a.kakimzhanov\Documents\GitHub\ITSClient\HotKeysLibrary\obj\Debug\HotKeys.pdb
+C:\Users\a.kakimzhanov\Documents\GitHub\ITSClient\HotKeysLibrary\bin\Debug\HotKeys.dll.CodeAnalysisLog.xml
+C:\Users\a.kakimzhanov\Documents\GitHub\ITSClient\HotKeysLibrary\bin\Debug\HotKeys.dll.lastcodeanalysissucceeded

@@ -15,7 +15,7 @@ using System.Security.Cryptography;
 using WebSocket4Net;
 using Newtonsoft.Json;
 using Microsoft.CSharp.RuntimeBinder;
-using System.Threading;
+using System.Threading; 
 
 namespace ITSClient
 {
@@ -31,6 +31,7 @@ namespace ITSClient
         public string nameMachine;
         public string ScreenLink;
         public string ScreenShotPath;
+        public string callinfo;
 
 
         public string websocketStatus;
@@ -38,11 +39,13 @@ namespace ITSClient
         public WebSocket websocket = new WebSocket("wss://api.ktg.kz:8001/", origin: "http://api.ktg.kz");
 
         HotKeysManager manager = new HotKeysManager();
+        private Random rng = new Random();
+ 
 
         #endregion
 
         #region ПРОЦЕДУРЫ И ФУНКЦИИ ОБЩЕГО НАЗНАЧЕНИЯ
- 
+
 
 
         private string GetIPAdress()
@@ -346,9 +349,12 @@ namespace ITSClient
 
                     if (messdata.on == "say")
                     {
-
+                        //ToastForm slice = new Form_Animation_and_Toast_Demo.ToastForm(this.rng.Next(2000, 10000), messdata.data.ToString());
+                        //slice.Activate();
+                        //slice.Height = this.rng.Next(50, 200);
+                        //slice.Show();
                         notifyIcon.ShowBalloonTip(5000, "IT Support Сервер", messdata.data.ToString(), ToolTipIcon.Info);
-                         
+
                     }
                     else if(messdata.on == "takescreen")
                     {
@@ -378,33 +384,32 @@ namespace ITSClient
                     {
                         System.Diagnostics.Process.Start(messdata.data.ToString());
                     }
-                    else if(messdata.on == "calltoyou")
+                    else if(messdata.on == "calltoyoubegin")
                     {
- 
+
+                        try {
 
 
-
-
-                        Form f1 = Application.OpenForms["DialForm"];
-
-                        if (f1 != null)
-                        {
-                             
-                            //f1.Close();
-                        }
-                        else
-                        {
-                            DialForm dialForm = Program.dialForm;
-                            foreach (string issue in messdata.data.issues)
+                            //sliceCount += 1;
+                            string callinfo = messdata.data.ad_info.company + "\n" +
+                            messdata.data.ad_info.departament + "\n" +
+                            messdata.data.ad_info.description + "\n" +
+                            messdata.data.ad_info.telephoneNumber + "\n" +
+                            messdata.data.ad_info.employeeID + "\n" +
+                            messdata.data.ad_info.mail + "\n";
+                            this.Invoke((ThreadStart)delegate ()
                             {
-                                dialForm.ProjectList.Items.Add(issue);
-                            }
-                            dialForm.CallerId.Text = "Звонок от: " + messdata.data.callerid.ToString();
-                            dialForm.ShowDialog();
+                                NotifyForm noti = new NotifyForm(messdata.data.ad_info.employeeID.ToString(), messdata.data.ad_info.cn.ToString(), callinfo);
+                                noti.Show();
+                            });
+                  
 
                         }
-
-
+                        catch (Exception er)
+                        {
+                            Console.WriteLine("{0} Exception caught.", er);
+                        }
+ 
 
                     }
                     else
@@ -432,11 +437,17 @@ namespace ITSClient
             nameMachine = System.Environment.MachineName;
             ipAdress = GetIPAdress();
 
+
+            this.Invoke((ThreadStart)delegate ()
+            {
          
+            
+
             websocket.Opened += new EventHandler(websocket_Opened);
             websocket.Closed += new EventHandler(websocket_Closed);
             websocket.MessageReceived += new EventHandler<MessageReceivedEventArgs>(websocket_MessageReceived);
             websocket.Open();
+            });
 
             NameUser.Text = nameUser;
             TextNameMachine.Text = nameMachine;
