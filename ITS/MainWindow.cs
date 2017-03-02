@@ -33,6 +33,7 @@ namespace ITSClient
         public string ScreenLink;
         public string ScreenShotPath;
         public string callinfo;
+        public string versions;
 
 
         public string websocketStatus;
@@ -187,6 +188,7 @@ namespace ITSClient
                 nameUser = System.Environment.UserName;
                 nameMachine = System.Environment.MachineName;
                 ipAdress = GetIPAdress();
+                versions = Environment.Version.ToString();
 
                 // Определим конечный каталог расположения файлов
                 //string path = String.Format(@"\\1c-app\ITS$\{0}\", Guid.NewGuid());//{1}\", currentUser, DateTime.Now.ToString("yyyy-MM-dd-hh-mm-ss"));
@@ -250,14 +252,15 @@ namespace ITSClient
             nameUser = System.Environment.UserName;
             nameMachine = System.Environment.MachineName;
             ipAdress = GetIPAdress();
+            versions = Environment.Version.ToString();
 
 
             var data = new Dictionary<string, string> {
                 { "currentUser", currentUser },
                 { "nameUser", nameUser },
                 { "nameMachine", nameMachine },
-                { "ipAdress", ipAdress }
-
+                { "ipAdress", ipAdress },
+                { "version", versions }
             };
 
             //string[] data = { currentUser, nameUser, nameMachine, ipAdress };
