@@ -71,7 +71,7 @@ namespace ITSClient
 
             // Add this form from the open form list.
             NotifyForm.openForms.Add(this);
-            this.timeToClose.Interval = 5000;
+            this.timeToClose.Interval = 600000;
             this.timeToClose.Start();
         }
   
@@ -113,6 +113,11 @@ namespace ITSClient
             {
                 NotifyForm.openedForms.Remove(this.header.Text);
             }
+        }
+
+        private void NotifyForm_MouseClick(object sender, MouseEventArgs e)
+        {
+            this.Close();
         }
     }
 }

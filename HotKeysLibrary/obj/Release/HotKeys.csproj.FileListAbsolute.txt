@@ -1,5 +1,4 @@
 C:\Users\a.kakimzhanov\Documents\GitHub\ITSClient\HotKeysLibrary\bin\Release\HotKeys.dll
 C:\Users\a.kakimzhanov\Documents\GitHub\ITSClient\HotKeysLibrary\bin\Release\HotKeys.pdb
-C:\Users\a.kakimzhanov\Documents\GitHub\ITSClient\HotKeysLibrary\obj\Release\HotKeys.csprojResolveAssemblyReference.cache
 C:\Users\a.kakimzhanov\Documents\GitHub\ITSClient\HotKeysLibrary\obj\Release\HotKeys.dll
 C:\Users\a.kakimzhanov\Documents\GitHub\ITSClient\HotKeysLibrary\obj\Release\HotKeys.pdb

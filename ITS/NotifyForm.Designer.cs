@@ -89,6 +89,7 @@
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.NotifyForm_FormClosed);
             this.Load += new System.EventHandler(this.NotifyForm_Load);
             this.Shown += new System.EventHandler(this.NotifyForm_Shown);
+            this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.NotifyForm_MouseClick);
             ((System.ComponentModel.ISupportInitialize)(this.avatar)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

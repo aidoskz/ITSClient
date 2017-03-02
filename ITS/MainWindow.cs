@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -188,32 +189,32 @@ namespace ITSClient
                 ipAdress = GetIPAdress();
 
                 // Определим конечный каталог расположения файлов
-                string path = String.Format(@"\\1c-app\ITS$\{0}\", Guid.NewGuid());//{1}\", currentUser, DateTime.Now.ToString("yyyy-MM-dd-hh-mm-ss"));
-                if (!System.IO.Directory.Exists(path))
-                {
-                    System.IO.Directory.CreateDirectory(path);
-                }
+                //string path = String.Format(@"\\1c-app\ITS$\{0}\", Guid.NewGuid());//{1}\", currentUser, DateTime.Now.ToString("yyyy-MM-dd-hh-mm-ss"));
+                //if (!System.IO.Directory.Exists(path))
+                //{
+                //    System.IO.Directory.CreateDirectory(path);
+                //}
 
                 // Создадим файл и сохраним туда всю информацию
-                System.IO.StreamWriter file = new System.IO.StreamWriter(path + "info.txt");
-                file.WriteLine("date=" + DateTime.Now.ToString("yyyyMMddHHmmss"));
-                file.WriteLine("currentUser=" + currentUser);
-                file.WriteLine("nameUser=" + nameUser);
-                file.WriteLine("nameMachine=" + nameMachine);
-                file.WriteLine("ipAdress=" + ipAdress);
-                file.Close();
+                //System.IO.StreamWriter file = new System.IO.StreamWriter(path + "info.txt");
+                //file.WriteLine("date=" + DateTime.Now.ToString("yyyyMMddHHmmss"));
+                //file.WriteLine("currentUser=" + currentUser);
+                //file.WriteLine("nameUser=" + nameUser);
+                //file.WriteLine("nameMachine=" + nameMachine);
+                //file.WriteLine("ipAdress=" + ipAdress);
+                //file.Close();
 
-                file = new System.IO.StreamWriter(path + "message.txt");
-                file.Write(ms.message);
-                file.Close();
+                //file = new System.IO.StreamWriter(path + "message.txt");
+                //file.Write(ms.message);
+                //file.Close();
 
-                // Перебираем все мониторы и сохраним в туже директорию
-                foreach (Screen scr in Screen.AllScreens)
-                {
-                    Image img = TakeScreenShot(scr);
-                    img.Save(String.Format(@"{0}{1}.png", path, scr.DeviceName.Substring(scr.DeviceName.Length - 1)), System.Drawing.Imaging.ImageFormat.Png);
+                //// Перебираем все мониторы и сохраним в туже директорию
+                //foreach (Screen scr in Screen.AllScreens)
+                //{
+                //    Image img = TakeScreenShot(scr);
+                //    img.Save(String.Format(@"{0}{1}.png", path, scr.DeviceName.Substring(scr.DeviceName.Length - 1)), System.Drawing.Imaging.ImageFormat.Png);
 
-                }
+                //}
 
                 notifyIcon.ShowBalloonTip(5000, "IT Support", "Обращение отправлено", ToolTipIcon.Info);
             }
@@ -411,6 +412,24 @@ namespace ITSClient
                         }
  
 
+                    }else if (messdata.on == "calltoyouend")
+                    {
+                         
+                        FormCollection fc = Application.OpenForms;
+                         
+
+                        foreach (Form frm in fc)
+                        {
+                            if(frm.Name == "NotifyForm")
+                            {
+
+                                frm.BeginInvoke((ThreadStart)delegate ()
+                                {
+                                    frm.Close();
+                                });
+
+                            }
+                        }
                     }
                     else
                     {
