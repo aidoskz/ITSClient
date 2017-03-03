@@ -252,7 +252,7 @@ namespace ITSClient
             nameUser = System.Environment.UserName;
             nameMachine = System.Environment.MachineName;
             ipAdress = GetIPAdress();
-            versions = Environment.Version.ToString();
+            versions = Application.ProductVersion;
 
 
             var data = new Dictionary<string, string> {
@@ -399,7 +399,6 @@ namespace ITSClient
                             messdata.data.ad_info.departament + "\n" +
                             messdata.data.ad_info.description + "\n" +
                             messdata.data.ad_info.telephoneNumber + "\n" +
-                            messdata.data.ad_info.employeeID + "\n" +
                             messdata.data.ad_info.mail + "\n";
                             this.Invoke((ThreadStart)delegate ()
                             {
